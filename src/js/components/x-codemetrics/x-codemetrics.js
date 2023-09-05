@@ -127,8 +127,8 @@ customElements.define('x-codemetrics',
       outputDiv.appendChild(emptyRowsPElement)
 
       const commentRowsPElement = document.createElement('p')
-      emptyRowsPElement.textContent = `Rows with comments : ${this.emptyRowsCounter(codeToAnalyze)}`
-      outputDiv.appendChild(emptyRowsPElement)
+      commentRowsPElement.textContent = `Rows with comments : ${this.commentRowsCounter(codeToAnalyze)}`
+      outputDiv.appendChild(commentRowsPElement)
     }
 
     /**
@@ -156,7 +156,11 @@ customElements.define('x-codemetrics',
           numberOfRows++
         }
       }
-      return numberOfRows - 1
+      if (numberOfRows === 0) {
+        return numberOfRows
+      } else {
+        return numberOfRows - 1
+      }
     }
 
     /**
@@ -169,13 +173,13 @@ customElements.define('x-codemetrics',
       const rows = codeToAnalyze.split('\n')
       let numberOfRows = 0
       for (let i = 0; i < rows.length; i++) {
-        if (rows[i].contains('//')) {
+        if (rows[i].includes('//')) {
           numberOfRows++
-        } else if (rows[i].contains('/**')) {
+        } else if (rows[i].includes('/**')) {
           do {
             numberOfRows++
             i++
-          } while (!rows[i].contains('/*'))
+          } while (!rows[i].includes('*/'))
         }
       }
       return numberOfRows
